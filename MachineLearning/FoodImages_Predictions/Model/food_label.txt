@@ -1,0 +1,42 @@
+Ayam Crispy: 0
+Ayam Kecap: 1
+Ayam Goreng: 2
+Bakso: 3
+Brownies: 4
+Bubur Ayam: 5
+Capcay: 6
+Cumi Bakar: 7
+Cumi Hitam: 8
+Cumi Rica: 9
+Dimsum Ikan: 10
+Garang Asem: 11
+Ikan Bakar: 12
+Ikan Goreng: 13
+Kentang Balado: 14
+Kue Bolu: 15
+Nasi Bakar: 16
+Nasi Goreng: 17
+Nasi Kuning: 18
+Nasi Merah: 19
+Nasi Rames: 20
+Opor Ayam: 21
+Pancake: 22
+Pecel: 23
+Pepes Ikan: 24
+Perkedel Kentang: 25
+Pukis: 26
+Rawon: 27
+Rendang: 28
+Salad Sayur: 29
+Sate Ayam: 30
+Sate Kambing: 31
+Sayur Asem: 32
+Sayur Sop: 33
+Soto Ayam: 34
+Telur Balado: 35
+Telur Dadar: 36
+Tumis Kacang Panjang Tahu: 37
+Tumis Kangkung: 38
+Tumis Terong: 39
+Udang Asam Manis: 40
+Udang Goreng Tepung: 41
