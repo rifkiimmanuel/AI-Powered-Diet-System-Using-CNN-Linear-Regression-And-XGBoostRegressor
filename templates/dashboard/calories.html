@@ -1,0 +1,243 @@
+{% extends 'partials/baseuser.html' %}
+{% block title %} Calories Page {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% include 'partials/topnav.html' %}
+
+<head>
+    <style>
+        body {
+            font-family: "Roboto", sans-serif;
+            background-color: #dbebf4;
+        }
+
+        header {
+            background-color: #89CFF0;
+        }
+
+        main {
+            background-color: #dbebf4;
+        }
+
+        .navbar-brand,
+        .text-primary {
+            color: white !important;
+        }
+
+        .nav-link {
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background-color: #0a58ca !important;
+            border: none;
+        }
+
+        .nav-link:hover {
+            color: #0a58ca;
+        }
+
+        p {
+            font-size: 18px;
+        }
+
+        .btn-primary:hover {
+            background-color: #257dfd !important;
+        }
+
+        .blue-bg {
+            background-color: #0a58ca;
+            color: #fff;
+        }
+
+        .text-primary {
+            color: #0a58ca !important;
+        }
+
+        .table-rounded {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+
+    {% for message in messages %}
+    {% if message %}
+    <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endif %}
+    {% endfor %}
+
+    <div class="container">
+        <div class="row my-4">
+            <div class="col-md-4">
+                <div class="border bg-white p-3">
+                    <h5>Add Your Daily Calories</h5>
+                    <hr>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form | crispy }}
+                        <input class="btn bg-primary text-white" type="submit" value="Add Product">
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h5>Today's Entries</h5>
+                <div>
+                    <table class="table bg-white table-hover table-rounded">
+                        <thead class="bg-info">
+                            <tr class="text-white my-3">
+                                <th scope="col">#</th>
+                                <th scope="col">Food Name</th>
+                                <th scope="col">Calories</th>
+                                <th scope="col">Serving</th>
+                                <th scope="col">Category</th>
+                                <th scope="col">Noted on</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items_today %}
+                            <tr class="my-3">
+                                <th scope="row" class="my-3">{{ forloop.counter }}</th>
+                                <td>{{ item.food_name }}</td>
+                                <td>{{ item.calories_amount }} / kal</td>
+                                <td>{{ item.serving }}</td>
+                                <td>{{ item.category }}</td>
+                                <td>{{ item.date }}</td>
+                                <td>
+                                    <a class="btn bg-primary text-white"
+                                        href="{% url 'dashboard-calories-update' item.pk %}">Update</a>
+                                    <a class="btn bg-danger text-white"
+                                        href="{% url 'dashboard-calories-delete' item.pk %}">Delete</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <strong>Total Calories Intake Today: </strong> <span class="text-primary fw-bold">
+                        {{total_calories_today}} Calories </span>
+                </div>
+                <h5 class="mt-5">Previous Entries</h5>
+                <table class="table bg-white table-hover table-rounded">
+                    <thead class="bg-secondary">
+                        <tr class="text-white">
+                            <th scope="col">#</th>
+                            <th scope="col">Food Name</th>
+                            <th scope="col">Calories</th>
+                            <th scope="col">Serving</th>
+                            <th scope="col">Category</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items_previous %}
+                        <tr>
+                            <th scope="row">{{ forloop.counter }}</th>
+                            <td>{{ item.food_name }}</td>
+                            <td>{{ item.calories_amount }} / kal</td>
+                            <td>{{ item.serving }}</td>
+                            <td>{{ item.category }}</td>
+                            <td>{{ item.date }}</td>
+                            <td>
+                                <a class="btn bg-primary text-white"
+                                    href="{% url 'dashboard-calories-update' item.pk %}">Update</a>
+                                <a class="btn bg-danger text-white"
+                                    href="{% url 'dashboard-calories-delete' item.pk %}">Delete</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Graphs -->
+        <div class="row my-5">
+            <div class="col-md-6">
+                <h5 class="fw-bold text-center my-3">Visualization of Calories Intake Today</h5>
+                <div class="bg-white">
+                    <canvas id="myPieChart" width="400" height="300"></canvas>
+                    <script>
+                        var ctx = document.getElementById('myPieChart').getContext('2d');
+                        var myPieChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: [{% for name in food_names %}'{{ name }}', {% endfor %}],
+                        datasets: [{
+                            data: [{% for amount in calories_amount %}{{ amount }}, {% endfor %}],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                                borderWidth: 1
+                            }]
+                        }
+                    });
+                    </script>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h5 class="fw-bold text-center my-3">Graph of Calories Intake for 7 Days</h5>
+                <div class="bg-white">
+                    <canvas id="myMixedChart" width="400" height="300"></canvas>
+                    <script>
+                        var ctx = document.getElementById('myMixedChart').getContext('2d');
+                        var myMixedChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                            labels: [{% for date in dates %}'{{ date }}', {% endfor %}],
+                            datasets: [{
+                            label: 'Total Calories intake per day',
+                            type: 'bar',
+                            data: [{%for total in total_calories%}{{ total }}, {% endfor %}],
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                         
+
+
+                            },
+                        {
+                            label: 'Daily Change',
+                                type: 'line',
+                                    data: [{% for change in daily_changes %} {{change }}, {% endfor %}],
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 2,
+                                    fill: false
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                        text: 'Total Calorie Intake and Daily Change'
+                                }
+                            }
+                        }
+                    });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+</body>
+<!-- Table -->

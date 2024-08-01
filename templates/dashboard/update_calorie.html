@@ -1,0 +1,41 @@
+{% extends 'partials/baseuser.html' %}
+{% block title %} Delete Page {% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<head>
+    <style>
+        body {
+            font-family: "Roboto", sans-serif;
+            background-color: #dbebf4;
+        }
+
+        .table-rounded {
+            border-radius: 7px;
+            overflow: hidden;
+        }
+
+    </style>
+</head>
+
+<div class="container ">
+    <div class="row mt-5">
+        <div class="col-md-6 offset-md-3">
+            <div class="border bg-white p-3 table-rounded" >
+                <h3>
+                    Edit
+                </h3>
+                <hr>
+                <form method="POST">
+                    {%csrf_token%}
+                    {{form | crispy }}
+                    <a  class = " btn btn-secondary "href="{%url 'dashboard-calories' %}"> Cancel </a>
+                    <input class="btn bg-info" type="submit"> 
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

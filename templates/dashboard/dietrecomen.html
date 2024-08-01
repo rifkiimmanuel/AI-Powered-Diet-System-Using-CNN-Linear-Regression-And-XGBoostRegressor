@@ -1,0 +1,182 @@
+
+{% extends 'partials/baseuser.html' %}
+{% block title %} Calories Page {% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% include 'partials/topnav.html' %}
+
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekomendasi Diet</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #dbebf4;
+        }
+    
+        .logo {
+            width: 13em;
+            height: 63px;
+        }
+    
+        h1 {
+            font-weight: 300;
+        }
+    
+        h1 strong {
+            font-weight: 600;
+            color: #0a58ca;
+        }
+    
+        .inputstyle {
+            padding: 20px !important;
+        }
+    
+        .whoop {
+            background-color: #dbebf4;
+            width: 8em;
+            font-size: 30px !important;
+            color: #fffafa;
+        }
+    
+        .caloriescont {
+            background-color: #ffffff;
+            padding: 30px;
+        }
+    
+        .caloriescont ul {
+            padding: 0px;
+        }
+    
+        .caloriescont ul li {
+            list-style: none;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #efefef;
+            width: 80%;
+        }
+    
+        .caloriescont h3 {
+            color: #4b8673;
+            font-size: 2em;
+            text-transform: capitalize;
+            font-weight: 700;
+        }
+    
+        .caloriescont h5 {
+            color: #4b8673;
+        }
+    
+        .servingsize {
+            background-color: #dbebf4;
+            padding: 10px;
+            color: #000000;
+        }
+    </style>
+
+
+
+</head>
+
+
+
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center fw-bold text-primary">Diet Recommendation </h1>
+
+        <!-- Formulir Input -->
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <label for="age" class="col-sm-2 col-form-label">Age:</label>
+                <div class="col-sm-10">
+                    <input type="number" id="age" name="age" class="form-control" value="{{ input_data.age }}" required>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="gender" class="col-sm-2 col-form-label">Gender:</label>
+                <div class="col-sm-10">
+                    <select id="gender" name="gender" class="form-select" required>
+                        <option value="male" {% if input_data.gender == 'male' %}selected{% endif %}>Man</option>
+                        <option value="female" {% if input_data.gender == 'female' %}selected{% endif %}>Women</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="weight" class="col-sm-2 col-form-label">Weight (kg):</label>
+                <div class="col-sm-10">
+                    <input type="number" id="weight" name="weight" class="form-control" value="{{ input_data.weight }}" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="height" class="col-sm-2 col-form-label">Height (cm):</label>
+                <div class="col-sm-10">
+                    <input type="number" id="height" name="height" class="form-control" value="{{ input_data.height }}" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="veg_or_nonveg" class="col-sm-2 col-form-label">Vegetarian or Non-Vegetarian:</label>
+                <div class="col-sm-10">
+                    <select id="veg_or_nonveg" name="veg_or_nonveg" class="form-select" required>
+                        <option value="vegetarian" {% if input_data.veg_or_nonveg == 'vegetarian' %}selected{% endif %}>Vegetarian</option>
+                        <option value="non_vegetarian" {% if input_data.veg_or_nonveg == 'non_vegetarian' %}selected{% endif %}>Non-Vegetarian</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="disease" class="col-sm-2 col-form-label">Input if you have disease:</label>
+                <div class="col-sm-10">
+                    <input type="text" id="disease" name="disease" class="form-control" value="{{ input_data.disease }}">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="region" class="col-sm-2 col-form-label">Input Your Region:</label>
+                <div class="col-sm-10">
+                    <input type="text" id="region" name="region" class="form-control" value="{{ input_data.region }}" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="state" class="col-sm-2 col-form-label">State:</label>
+                <div class="col-sm-10">
+                    <input type="text" id="state" name="state" class="form-control" value="{{ input_data.state }}" required>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="allergics" class="col-sm-2 col-form-label">allergics</label>
+                <div class="col-sm-10">
+                    <input type="text" id="allergics" name="allergics" class="form-control" value="{{ input_data.allergics }}">
+                </div>
+            </div>
+            <div class="row mb-3">
+                <label for="foodtype" class="col-sm-2 col-form-label">Food Type:</label>
+                <div class="col-sm-10">
+                    <input type="text" id="foodtype" name="foodtype" class="form-control" value="{{ input_data.foodtype }}" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Get Recommendation</button>
+        </form>
+
+        <!-- Hasil  -->
+        {% if results %}
+            <h2 class="mt-4">Recommendation Result:</h2>
+            <pre>{{ results|safe }}</pre>
+        {% endif %}
+
+        {% if error %}
+            <div class="alert alert-danger mt-4">{{ error }}</div>
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+{% endblock %}

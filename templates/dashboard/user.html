@@ -1,0 +1,119 @@
+{% extends 'partials/baseuser.html' %}
+{% block title %}Home Page{% endblock %}
+{% block content %}
+{% include 'partials/topnav.html' %}
+<!-- Graphs-->
+<div class="container">
+    <div class="row my-5">
+        <div class="col-md-6">
+            <h5>Graph of your daily Calories </h5>
+            <div class="bg-white">
+                <canvas id="myPieChart" width="400" height="300"></canvas>
+               
+                <script>
+                    var ctx = document.getElementById('myPieChart').getContext('2d');
+                    var myPieChart = new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: [{% for name in food_names %}'{{ name }}', {% endfor %}],
+                            datasets: [{
+                                data: [{% for amount in calories_amount %}{{ amount }}, {% endfor %}],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)',
+                                    // Add more colors if needed
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)',
+                                    // Add more border colors if needed
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: {
+                                    position: 'top',
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Calorie Intake Per Food Item for Today'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(tooltipItem) {
+                                            var label = tooltipItem.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            if (tooltipItem.raw !== null) {
+                                                label += tooltipItem.raw + ' calories';
+                                            }
+                                            return label;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="bg-white">
+                <canvas id="myMixedChart" width="400" height="300"></canvas>
+                <script>
+                    var ctx = document.getElementById('myMixedChart').getContext('2d');
+                    var myMixedChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: [{% for date in dates %}'{{ date }}', {% endfor %}],
+                            datasets: [{
+                                label: 'Total Calories intake per day',
+                                type: 'bar',
+                                data: [{% for total in total_calories %}{{ total }}, {% endfor %}],
+                                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Daily Change',
+                                type: 'line',
+                                data: [{% for change in daily_changes %}{{ change }}, {% endfor %}],
+                                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 2,
+                                fill: false
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Total Calorie Intake and Daily Change'
+                                }
+                            }
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div> 
+<!--End Graphs-->
+{% endblock %}

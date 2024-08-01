@@ -1,0 +1,75 @@
+{% extends 'partials/baseuser.html' %}
+{% block title %}Food Prediction{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<!-- Include Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    body {
+        background-color: #dbebf4;
+    }
+    .cont {
+        max-width: 800px;
+        margin: 0 auto; /* Center the container horizontally */
+        padding: 0 15px; /* Add some horizontal padding */
+    }
+    .card {
+        margin-top: 20px;
+    }
+    .nutrition-facts {
+        color: #28a745; /* Green color for nutrition facts */
+    }
+    .breakdown-details {
+        color: #dc3545; /* Red color for breakdown details */
+    }
+</style>
+
+<div class="cont text-center">
+    <h1 class="mt-5 fw-bold ">Upload an Image</h1>
+    <form method="post" enctype="multipart/form-data" class="mt-4">
+        {% csrf_token %}
+        <input type="file" name="image" accept="image/*" class="form-control mb-3">
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+
+    {% if label %}
+    <div class="card mt-5 mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+            <h2 class="card-title">Prediction Result</h2>
+            <p class="card-text">Predicted Label: <strong>{{ label }}</strong></p>
+        </div>
+    </div>
+
+    <!-- Card for the uploaded image -->
+    <div class="card mt-4 mx-auto" style="max-width: 600px;">
+        <img src="{{ image_url }}" alt="Uploaded Image" class="card-img-top img-fluid">
+    </div>
+
+    <!-- Card for Nutrition Facts -->
+    {% if nutrition_data %}
+    <div class="card mt-4 mx-auto" style="max-width: 600px;">
+        <div class="card-body">
+            <h3 class="nutrition-facts">Nutrition Facts</h3>
+            <ul class="list-unstyled">
+                {% for key, value in nutrition_data.items %}
+                <li>{{ key }}: {{ value }}</li>
+                {% endfor %}
+            </ul>
+            
+            {% if breakdown_details %}
+            <h3 class="breakdown-details mt-4">Breakdown Details</h3>
+            <p>{{ breakdown_details }}</p>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <p class="mt-4">Nutritional information not available.</p>
+    {% endif %}
+    {% endif %}
+</div>
+
+<!-- Include Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

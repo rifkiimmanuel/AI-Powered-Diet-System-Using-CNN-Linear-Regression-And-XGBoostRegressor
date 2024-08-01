@@ -1,0 +1,91 @@
+{% extends 'partials/baseuser.html' %}
+{% block title %} Body Fat Prediction {% endblock %}
+
+{% block content %}
+    {% include 'partials/topnav.html' %}
+
+
+    <head>
+        <style>
+            body{
+                background-color: #dbebf4;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container mt-5">
+            <h2 class="fw-bold text-primary text-center">Body Fat Prediction</h2>
+            <form method="post" action="{% url 'dashboard-predict_body_fat' %}" id="prediction-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="age">Age:</label>
+                    <input type="number" class="form-control" id="age" name="age" required>
+                </div>
+                <div class="form-group">
+                    <label for="weight">Height (in):</label>
+                    <input type="number" class="form-control" id="weight" name="weight" required>
+                </div>
+                <div class="form-group">
+                    <label for="height">Weight (in):</label>
+                    <input type="number" class="form-control" id="height" name="height" required>
+                </div>
+                <div class="form-group">
+                    <label for="neck">Neck Circumference (cm):</label>
+                    <input type="number" class="form-control" id="neck" name="neck" required>
+                </div>
+                <div class="form-group">
+                    <label for="chest">Chest Circumference (cm):</label>
+                    <input type="number" class="form-control" id="chest" name="chest" required>
+                </div>
+                <div class="form-group">
+                    <label for="abdomen">Abdomen Circumference (cm):</label>
+                    <input type="number" class="form-control" id="abdomen" name="abdomen" required>
+                </div>
+                <div class="form-group">
+                    <label for="hip">Hip Circumference (cm):</label>
+                    <input type="number" class="form-control" id="hip" name="hip" required>
+                </div>
+                <div class="form-group">
+                    <label for="thigh">Thigh Circumference (cm):</label>
+                    <input type="number" class="form-control" id="thigh" name="thigh" required>
+                </div>
+                <div class="form-group">
+                    <label for="knee">Knee Circumference (cm):</label>
+                    <input type="number" class="form-control" id="knee" name="knee" required>
+                </div>
+                <div class="form-group">
+                    <label for="ankle">Ankle Circumference (cm):</label>
+                    <input type="number" class="form-control" id="ankle" name="ankle" required>
+                </div>
+                <div class="form-group">
+                    <label for="biceps">Biceps Circumference (cm):</label>
+                    <input type="number" class="form-control" id="biceps" name="biceps" required>
+                </div>
+                <div class="form-group">
+                    <label for="forearm">Forearm Circumference (cm):</label>
+                    <input type="number" class="form-control" id="forearm" name="forearm" required>
+                </div>
+                <div class="form-group">
+                    <label for="wrist">Wrist Circumference (cm):</label>
+                    <input type="number" class="form-control" id="wrist" name="wrist" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Predict</button>
+            </form>
+    
+            {% if predicted_body_fat %}
+                <div class="mt-4">
+                    <h4>Predicted Body Fat Percentage: {{ predicted_body_fat|floatformat:2 }}%</h4>
+                </div>
+            {% endif %}
+    
+            {% if error %}
+                <div class="mt-4 alert alert-danger">
+                    <strong>Error:</strong> {{ error }}
+                </div>
+            {% endif %}
+        </div>
+        
+    </body>
+
+{% endblock %}

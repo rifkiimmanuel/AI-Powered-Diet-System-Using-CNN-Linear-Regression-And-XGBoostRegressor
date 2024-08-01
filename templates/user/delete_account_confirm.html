@@ -1,0 +1,28 @@
+{% extends 'partials/baseuser.html' %}
+{% block title %} Delete Account {% endblock %}
+
+{% block content %}
+<section style="background-color: #dbebf4;">
+  <div class="container p-5">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <h2 class="h3 text-center fw-bold text-danger">Confirm Account Deletion</h2>
+            <p class="text-muted mb-4">Are you sure you want to delete your account? This action cannot be undone.</p>
+            <form method="POST">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Delete My Account</button>
+              <a href="{% url 'user-profile' %}" class="btn btn-secondary">Cancel</a>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  {% include 'partials/footer.html' %}
+</footer>
+{% endblock %}
